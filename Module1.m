@@ -1,1 +1,1 @@
-%Module 1
+%Author Stefan Yoshovski
