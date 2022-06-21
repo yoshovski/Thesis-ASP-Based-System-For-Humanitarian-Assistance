@@ -20,11 +20,14 @@ collectionPoint(ID,People_Capacity,KM_Range).
 shelter(ID,People_Capacity).
 %People_Capacity -> number of people which can be recieved in the structure at the same time.
 
-%Group: A divison of people based on age, gender in a specific shelter.
-group(ID_Group,ID_Shelter,Gender,L_Age,U_Age).
+%Age Group: The suddivision of the population into different age groups.
+ageGroup(ID,L_Age,U_Age).
 %A group is also characterized by an opened interval with two margins, L_Age and U_Age
-%L_Age -> Lower Age Boundary
-%U_Age -> Upper Age Boundary
+%L_Age -> lower bound of the age group
+%U_Age -> upper bound of the age group
+
+%Group: A divison of people based on age, gender
+group(ID_Group,Gender,N_People,ID_Age_Group).
 
 %https://en.um.warszawa.pl/-/what-and-where-can-you-bring-for-refugees
 %Company: Sells goods in at least one of the following categories (food,food for babies, personal hygiene products, baby products, medicine, first aid supplies, camping goods,clothes)
@@ -49,3 +52,23 @@ clothesRequirement(Group_ID,Size,Type).
 medicineRequirement(Group_ID,Name).
 
 
+%Rules for the system
+%1. If a group is in a shelter, it cannot be in any other shelter
+%2. The total number of people in a shelter cannot be greater than the capacity of the shelter
+%3. It is preferred that groups with the same age group are in the same shelter (priority medium)
+%4. It is preferred that the capacity of a shelter is used up before the next shelter is used (priority high)
+
+
+% atoms
+shelter(1,10).
+shelter(2,5).
+
+ageGroup(1,25,30).
+
+group(1,male,5,1).
+
+
+in(Group_ID,Shelter_ID) | out(Group_ID,Shelter_ID) :- group(Group_ID,_,_,_), shelter(Shelter_ID,_).
+
+%1. If a group is in a shelter, it cannot be in any other shelter
+:- in(Group_ID,Shelter_ID), in(Group_ID,Shelter_ID2), Shelter_ID != Shelter_ID2.

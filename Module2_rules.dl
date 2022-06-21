@@ -1,0 +1,31 @@
+%Rules for the system
+%%1. If a group is in a shelter, it cannot be in any other shelter 
+%%2. The total number of people in a shelter cannot be greater than the capacity of the shelter
+%3. It is preferred that groups with the same age group are in the same shelter (priority medium)
+%4. It is preferred that the capacity of a shelter is used up before the next shelter is used (priority high)
+%%5. Every group is assigned to a shelter
+
+
+#show in/2.
+
+% atoms
+shelter(1,10).
+shelter(2,5).
+
+ageGroup(1,25,30).
+
+group(1,male,5,1).
+group(2,male,4,1).
+group(3,male,4,1).
+
+
+in(Group_ID,Shelter_ID) | out(Group_ID,Shelter_ID) :- group(Group_ID,_,_,_), shelter(Shelter_ID,_).
+
+%1. If a group is in a shelter, it cannot be in any other shelter
+:- in(Group_ID,Shelter_ID), in(Group_ID,Shelter_ID2), Shelter_ID != Shelter_ID2.
+
+%5. Every group is assigned to a shelter
+:- group(G_ID,_,_,_), #count{G_ID:in(G_ID,_)} != 1.
+
+%2. The total number of people in a shelter cannot be greater than the capacity of the shelter
+:- #sum{C, G_ID: group(G_ID,_,C,_), in(G_ID,S_ID)}=SUM, shelter(S_ID,Capacity), SUM > Capacity.
