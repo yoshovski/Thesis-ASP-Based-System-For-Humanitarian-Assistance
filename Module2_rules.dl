@@ -1,4 +1,4 @@
-%Rules for the system
+%Rules for the shelters and groups
 %%1. If a group is in a shelter, it cannot be in any other shelter 
 %%2. The total number of people in a shelter cannot be greater than the capacity of the shelter
 %3. It is preferred that groups with the same age group are in the same shelter (priority medium)
@@ -6,13 +6,18 @@
 %%5. Every group is assigned to a shelter
 
 
-#show in/2.
+%#show in/2.
 
 % atoms
 shelter(1,10).
 shelter(2,5).
 
-ageGroup(1,25,30).
+ageGroup(1,0,18).
+ageGroup(2,18,25).
+ageGroup(3,26,39).
+ageGroup(4,40,59).
+ageGroup(5,60,75).
+ageGroup(6,76,200).
 
 group(1,male,5,1).
 group(2,male,4,1).
@@ -29,3 +34,29 @@ in(Group_ID,Shelter_ID) | out(Group_ID,Shelter_ID) :- group(Group_ID,_,_,_), she
 
 %2. The total number of people in a shelter cannot be greater than the capacity of the shelter
 :- #sum{C, G_ID: group(G_ID,_,C,_), in(G_ID,S_ID)}=SUM, shelter(S_ID,Capacity), SUM > Capacity.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%companies
+company(cf1,food).
+company(cbf1,baby_food).
+company(cph1,personal_care).
+company(cbp1,baby_products).
+company(cm1,medicines).
+company(cfas1,first_aid_supplies).
+company(ccg1,camping_goods).
+company(cc1,clothing).
+
+%food requirements
+%calulated with https://www.calculator.net/macro-calculator.html
+%foodRequirement(2,61,287,131,2151). %in grams
+foodRequirement(2,13,60,27,2151). %fats, carbs and proteins in percentage, calories in kcal
+
+%PRODUCTS
+%food products
+food(rice,2,90,8,129,100).
+food(potato,21,73,6,104,100).
+
+%food options
+foodOption(cf1,rice,100,10).
+

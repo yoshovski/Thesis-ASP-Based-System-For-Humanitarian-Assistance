@@ -1,11 +1,3 @@
-
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-
 %Location: where there is a large number of refugee arrivals
 location(ID,NumPeople).
 
@@ -34,41 +26,27 @@ group(ID_Group,Gender,N_People,ID_Age_Group).
 company(ID,Category).
 %Category -> food, baby_food,personal_hygiene,baby_products,medicine,first_aid_supplies,camping_goods, clothes
 
+%There will be a set of selected food products. These products will be the ones proposed in the shelters.
+food(Name,Fats,Carbs,Proteins,Calories).
+
 
 %Each company has one or more offers with different prices and different type of goods.
-foodOption(ID_Company,Expiration_Date,Price).
+foodOption(ID_Company,Product,Durability,Amount,Price).
+%Product -> food, baby_food,personal_hygiene,baby_products,medicine,first_aid_supplies,camping_goods, clothes
+%Durability -> how long the product will last (in days)
+%Amount -> number of grams of the product
+%Price -> price of the product
+
 babyFoodOption(ID_Company,Expiration_Date,Price).
-personalHygieneOption(ID_Company,Price).
+personalCareOption(ID_Company,Price).
 babyProductsOption(ID_Company,Price).
 medicine(ID_Company,Price).
 firstAidSuppliesOption(ID_Company,Price).
 campingGoodsOption(ID_Company,Price).
-clothesOption(ID_Company,Price).
+clothingOption(ID_Company,Price).
 
 %Each Group of People has different needs and requiremenents
-foodRequirement(Group_ID,Fats,Carbs,Proteins,Calories).
-babyFoodRequirement(Group_ID,Fats,Carbs,Proteins,Calories).
-clothesRequirement(Group_ID,Size,Type).
+foodRequirement(ID_Age_Group,Fats,Carbs,Proteins,Calories). %Fats, Carbs, Proteins, Calories -> in grams
+babyFoodRequirement(Group_ID,Fats,Carbs,Proteins,Calories). %Fats, Carbs, Proteins, Calories -> in grams
+clothingRequirement(Group_ID,Size,Type).
 medicineRequirement(Group_ID,Name).
-
-
-%Rules for the system
-%1. If a group is in a shelter, it cannot be in any other shelter
-%2. The total number of people in a shelter cannot be greater than the capacity of the shelter
-%3. It is preferred that groups with the same age group are in the same shelter (priority medium)
-%4. It is preferred that the capacity of a shelter is used up before the next shelter is used (priority high)
-
-
-% atoms
-shelter(1,10).
-shelter(2,5).
-
-ageGroup(1,25,30).
-
-group(1,male,5,1).
-
-
-in(Group_ID,Shelter_ID) | out(Group_ID,Shelter_ID) :- group(Group_ID,_,_,_), shelter(Shelter_ID,_).
-
-%1. If a group is in a shelter, it cannot be in any other shelter
-:- in(Group_ID,Shelter_ID), in(Group_ID,Shelter_ID2), Shelter_ID != Shelter_ID2.
