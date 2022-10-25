@@ -1,9 +1,9 @@
-%Rules for the shelters and groups
-%%1. If a group is in a shelter, it cannot be in any other shelter 
-%%2. The total number of people in a shelter cannot be greater than the capacity of the shelter
-%3. It is preferred that groups with the same age group are in the same shelter (priority medium)
-%4. It is preferred that the capacity of a shelter is used up before the next shelter is used (priority high)
-%%5. Every group is assigned to a shelter
+% Rules for the shelters and groups
+% 1. If a group is in a shelter, it cannot be in any other shelter 
+% 2. The total number of people in a shelter cannot be greater than the capacity of the shelter
+% 3. It is preferred that groups with the same age group are in the same shelter (priority medium)
+% 4. It is preferred that the capacity of a shelter is used up before the next shelter is used (priority high)
+% 5. Every group is assigned to a shelter
 
 
 %#show in/2.
