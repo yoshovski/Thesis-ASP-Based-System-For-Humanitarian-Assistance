@@ -1,0 +1,22 @@
+% if before a Rule, there are two %% (it has been verified and works)
+
+
+%%% REFUGEES %%%
+% Divide refugees into age groups
+% 1. 
+
+%% MODEL %%
+%person(ID,Name,Surname,Age,ArrivalDate).
+%relatives(ID1,ID2).
+
+%% DATA %%
+% person(Name,Surname,Age,ArrivalDate).
+person(1,"John","Smith",20,2015).
+person(2,"Jane","Smith",15,2015).
+
+%relatives(Name1,Surname1,Name2,Surname2).
+relatives(1,2).
+
+%% RULES %%
+
+
