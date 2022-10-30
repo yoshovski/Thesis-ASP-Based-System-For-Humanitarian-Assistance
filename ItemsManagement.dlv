@@ -1,0 +1,37 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%% ITEMS REQUIRED %%%
+
+%% MODEL %%
+
+%% DATA %%
+
+% company(ID,Category).
+% Company: Sells goods in at least one of the following categories (food,food for babies, personal hygiene products, baby products, medicine, first aid supplies, camping goods,clothes)
+company(c1,"food").
+company(c2,"food").
+company(c3,"hygiene").
+company(c4,"baby").
+company(c5,"medicine").
+company(c6,"first aid").
+company(c7,"camping").
+company(c8,"clothes").
+
+% productRequired(ID,Location,Category,Name,Quantity).
+% Product Required: Item required in the reception center
+producutRequired(p1,r1,"food","bread",10).
+
+
+%% RULES %%
+
+% Guess and check
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
