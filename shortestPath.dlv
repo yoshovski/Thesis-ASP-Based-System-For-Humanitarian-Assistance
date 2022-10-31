@@ -1,0 +1,44 @@
+#show inPath/3.
+#show ma/1.
+#show reached/1.
+#show totalDistance/1.
+#show bestLocation/1.
+
+
+city("A").
+city("B").
+city("C").
+city("D").
+city("E").
+
+distance("A","B",5).
+distance("A","C",2).
+distance("A","D",3).
+distance("D","B",1).
+distance("D","E",2).
+distance("C","E",1).
+
+distance(X,Y,Z) :- distance(Y,X,Z).
+
+start("B").
+end("C").
+
+%Shortest Path from start to end (passing through all end points)
+% inPath(X,Y,C) | outPath(X,Y,C) :- distance(X,Y,C).
+% reached(X) :- start(X).
+% reached(X) :- inPath(Y,X,C), reached(Y).
+% :- inPath(X,Y,_), inPath(X,Y1,_), Y!=Y1.
+% :- inPath(X,Y,_), inPath(X1,Y,_), X!=X1.
+% :- end(X), not reached(X).
+% :~ inPath(X,Y,C). [C@1,X]
+
+% Shortest Path between start and end. 
+inPath(X,Y,C) | outPath(X,Y,C) :- distance(X,Y,C).
+reached(X) :- start(X).
+reached(X) :- inPath(Y,X,C), reached(Y).
+:- inPath(X,Y,_), inPath(X,Y1,_), Y!=Y1.
+:- inPath(X,Y,_), inPath(X1,Y,_), X!=X1.
+:- #count{X : end(X), reached(X)}=Y, Y!=1. % Only one end point reached
+totalDistance(X) :- #sum{C,A,B : inPath(A,B,C)}=X. 
+bestLocation(X) :- end(X), reached(X).
+:~ inPath(X,Y,C). [C@1,X,Y]
