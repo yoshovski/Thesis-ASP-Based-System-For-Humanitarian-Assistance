@@ -1,0 +1,38 @@
+#show inPath/4.
+#show reached/1.
+#show totalDistance/2.
+#show bestLocation/2.
+
+volunteer(v1,"Mark Carter","Krakow").
+preferredLocation(v1,"B",10).
+
+receptionCenter(r1,"C",100).
+receptionCenter(r2,"E",100).
+
+
+city("A").
+city("B").
+city("C").
+city("D").
+city("E").
+
+distance("A","B",5).
+distance("A","C",2).
+distance("A","D",3).
+distance("D","B",1).
+distance("D","E",2).
+distance("C","E",1).
+
+distance(X,Y,Z) :- distance(Y,X,Z). % double connected arcs
+
+
+inPath(V,C1,C2,D) | outPath(V,C1,C2,D) :- distance(C1,C2,D), volunteer(V,_,_).
+reached(V,C) :- preferredLocation(V,C,_).
+reached(V,X) :- inPath(V,Y,X,C), reached(V,Y).
+:- inPath(V,X,Y,_), inPath(V,X,Y1,_), Y!=Y1.
+:- inPath(V,X,Y,_), inPath(V,X1,Y,_), X!=X1.
+
+:- #count{X,V : receptionCenter(_,X,_), reached(V,X)}=Y, Y!=1. % Only one reception center reached
+totalDistance(V,X) :- #sum{C,V,A,B : inPath(V,A,B,C)}=X, volunteer(V,_,_). 
+bestLocation(V,RC) :- receptionCenter(RC,X,_), reached(V,X).
+:~ inPath(V,X,Y,C). [C@1,V,X,Y]

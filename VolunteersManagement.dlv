@@ -102,14 +102,14 @@ canPerformRole(v2,"translator").
 % preference(VolunteerID,Role,Priority).
 % Role -> the role that the volunteer prefers to perform
 % Priority -> the priority of the preference (1 is the highest priority)
-preferedRole(v1,"doctor",1).
-preferedRole(v2,"translator",1).
+preferredRole(v1,"doctor",1).
+preferredRole(v2,"translator",1).
 
 % preferedLocation(VolunteerID,Location,Priority).
 % Volunteers will be assigned to their location of origin,otherwise they will be assigned to the location with the highest priority
 % Location -> the location where the volunteer prefers to be assigned
 % Priority -> the priority of the preference (1 is the highest priority)
-preferedLocation(v1,"Krakow",1).
+preferredLocation(v1,"Krakow",1).
 
 % A volunteer can have specific amount of time that he can work per week
 % maxHoursPerWeek(VolunteerID,MaxHours).

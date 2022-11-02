@@ -22,6 +22,7 @@ distance(X,Y,Z) :- distance(Y,X,Z).
 
 start("B").
 end("C").
+end("E").
 
 %Shortest Path from start to end (passing through all end points)
 % inPath(X,Y,C) | outPath(X,Y,C) :- distance(X,Y,C).
