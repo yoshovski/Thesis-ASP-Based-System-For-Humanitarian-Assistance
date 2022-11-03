@@ -1,16 +1,15 @@
-#show inPath/4.
-#show reached/2.
 #show totalDistance/2.
-#show inRealEnd/3.
+#show suitableReceptionCenter/2.
 
 volunteer(v1,"Mark Carter","Krakow").
 volunteer(v2,"Mark Carter","Krakow").
 preferredLocation(v1,"A",10).
 preferredLocation(v2,"B",10).
+preferredLocation(v3,"B",10).
 
 receptionCenter(r1,"C",100).
 receptionCenter(r2,"E",100).
-% receptionCenter(r3,"D",100).
+receptionCenter(r3,"D",100).
 
 city("A").
 city("B").
@@ -53,6 +52,7 @@ reached(V,X) :- inPath(V,Y,X,Cost), reached(V,Y).
 % there must not be two arcs ending in the same node
 :- inPath(V,X,Y,_), inPath(V,X1,Y,_), X!=X1.
 
+% The path must reach the real end node
 :- inRealEnd(V,_,X), not reached(V,X).
 
 % Number of outward arcs for each reached node
@@ -76,16 +76,21 @@ inward(V,Y,N) :- reached(V,Y), #count{V,X,Y : inPath(V,X,Y,_)}=N.
 % Total distance X to be traveled by each volunteer V
 totalDistance(V,X) :- #sum{C,V,A,B : inPath(V,A,B,C)}=X, start(V,_).
 
-%%%%%%%%%%%%%%%%%%%
-
-% % Best reception center RC for each volunteer V
-% bestLocation(V,RC) :- receptionCenter(RC,X,_), reached(V,X).
+% The volunteer V is assigned to a Reception Center RC within a range of distance X from the preferred location of the volunteer.
+suitableReceptionCenter(V,RC) :- inRealEnd(V,RC,_), totalDistance(V,X), preferredLocation(V,_,MaxRange), X<=MaxRange.
 
 %Number of all volunteers with preferred Location
 totalVolunteers(N) :- #count{V : preferredLocation(V,_,_)}=N.
 
-% % Number of volunteers assigned to each short path
-% assignedToShortPath(N) :- #count{V : inPath(V,_,_,_)}=N.
+% Maximize the number of volunteers able to be assigned to a reception center (high priority)
+% Pay for each volunteer not suitable for a reception center (who can't be assigned to a reception center)
+:~ #count{V,RC : suitableReceptionCenter(V,RC)}=X, totalVolunteers(N), Z=N-X. [Z@2]
+%:~ volunteer(V,_,_), not suitableReceptionCenter(V,RC), receptionCenter(RC,_,_). [1@2,V]
 
-% % Number of volunteers is equal to the number of volunteers assigned to short path
-% :- totalVolunteers(N), assignedToShortPath(N1), N!=N1.
+% Minimize the distance traveled by each volunteer
+% Pay for the distance traveled by each volunteer, who is suitable for a reception center
+:~ totalDistance(V,Cost), suitableReceptionCenter(V,_). [Cost@1,V]
+
+
+
+
