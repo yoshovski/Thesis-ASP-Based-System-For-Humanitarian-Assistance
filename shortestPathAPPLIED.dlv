@@ -2,12 +2,16 @@
 #show reached/1.
 #show totalDistance/2.
 #show bestLocation/2.
+#show all/1.
 
 volunteer(v1,"Mark Carter","Krakow").
+volunteer(v2,"Mark Carter","Krakow").
 preferredLocation(v1,"B",10).
+preferredLocation(v2,"B",10).
 
 receptionCenter(r1,"C",100).
-receptionCenter(r2,"E",100).
+% receptionCenter(r2,"E",100).
+% receptionCenter(r3,"D",100).
 
 
 city("A").
@@ -25,14 +29,43 @@ distance("C","E",1).
 
 distance(X,Y,Z) :- distance(Y,X,Z). % double connected arcs
 
+% Guess and Check approach, to find the shortest path from a city to another for each preference of each volunteer
+inPath(V,C1,C2,D) | outPath(V,C1,C2,D) :- distance(C1,C2,D), preferredLocation(V,_,_).
 
-inPath(V,C1,C2,D) | outPath(V,C1,C2,D) :- distance(C1,C2,D), volunteer(V,_,_).
+% Starting city C of the path for volunteer V
 reached(V,C) :- preferredLocation(V,C,_).
+
+% Transition from one city to another for volunteer V
 reached(V,X) :- inPath(V,Y,X,C), reached(V,Y).
+
+% there must not be two arcs starting at the same node
 :- inPath(V,X,Y,_), inPath(V,X,Y1,_), Y!=Y1.
+
+% there must not be two arcs ending in the same node
 :- inPath(V,X,Y,_), inPath(V,X1,Y,_), X!=X1.
 
-:- #count{X,V : receptionCenter(_,X,_), reached(V,X)}=Y, Y!=1. % Only one reception center reached
-totalDistance(V,X) :- #sum{C,V,A,B : inPath(V,A,B,C)}=X, volunteer(V,_,_). 
+% Only one reception center reached per volunteer (the end of the path has been reached)
+:- #count{X,V : receptionCenter(_,X,_), reached(V,X)}=Y, Y!=1. 
+
+% Total distance X to be traveled by each volunteer V
+totalDistance(V,X) :- #sum{C,V,A,B : inPath(V,A,B,C)}=X, preferredLocation(V,_,_).
+
+% Best reception center RC for each volunteer V
 bestLocation(V,RC) :- receptionCenter(RC,X,_), reached(V,X).
-:~ inPath(V,X,Y,C). [C@1,V,X,Y]
+
+%Number of all volunteers with preferred Location
+totalVolunteers(N) :- #count{V : preferredLocation(V,_,_)}=N.
+
+% Number of volunteers assigned to each short path
+assignedToShortPath(N) :- #count{V : inPath(V,_,_,_)}=N.
+
+% Number of volunteers is equal to the number of volunteers assigned to short path
+:- totalVolunteers(N), assignedToShortPath(N1), N!=N1.
+
+
+%all(X) :- #count{V : inPath(V,_,_,_)}=X, #count{V2 : preferredLocation(V2,_,_)}=Y ,X==Y.
+%:- #count{V : inPath(V,_,_,_)}=X, #count{V2 : preferredLocation(V2,_,_)}=Y, X!=Y.
+
+:~ totalDistance(V,D). [D@1]
+
+%:~ inPath(V,X,Y,C). [C@1,V,X,Y]

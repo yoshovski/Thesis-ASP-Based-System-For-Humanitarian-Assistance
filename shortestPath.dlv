@@ -1,9 +1,7 @@
 #show inPath/3.
-#show ma/1.
 #show reached/1.
 #show totalDistance/1.
 #show bestLocation/1.
-
 
 city("A").
 city("B").
@@ -21,10 +19,11 @@ distance("C","E",1).
 distance(X,Y,Z) :- distance(Y,X,Z).
 
 start("B").
+% start("A").
 end("C").
 end("E").
 
-%Shortest Path from start to end (passing through all end points)
+%%% Shortest Path from start to end (passing through all end points)
 % inPath(X,Y,C) | outPath(X,Y,C) :- distance(X,Y,C).
 % reached(X) :- start(X).
 % reached(X) :- inPath(Y,X,C), reached(Y).
@@ -33,7 +32,7 @@ end("E").
 % :- end(X), not reached(X).
 % :~ inPath(X,Y,C). [C@1,X]
 
-% Shortest Path between start and end. 
+%%% Shortest Path between start and end (more end points possible, only one end point will be chosen)
 inPath(X,Y,C) | outPath(X,Y,C) :- distance(X,Y,C).
 reached(X) :- start(X).
 reached(X) :- inPath(Y,X,C), reached(Y).
