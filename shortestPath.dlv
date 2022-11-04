@@ -19,7 +19,7 @@ distance("C","E",1).
 distance(X,Y,Z) :- distance(Y,X,Z).
 
 start("B").
-% start("A").
+start("A").
 end("C").
 end("E").
 
@@ -33,12 +33,65 @@ end("E").
 % :~ inPath(X,Y,C). [C@1,X]
 
 %%% Shortest Path between start and end (more end points possible, only one end point will be chosen)
+% inPath(X,Y,C) | outPath(X,Y,C) :- distance(X,Y,C).
+% reached(X) :- start(X).
+% reached(X) :- inPath(Y,X,C), reached(Y).
+% :- inPath(X,Y,_), inPath(X,Y1,_), Y!=Y1.
+% :- inPath(X,Y,_), inPath(X1,Y,_), X!=X1.
+% :- #count{X : end(X), reached(X)}=Y, Y!=1. % Only one end point reached
+% totalDistance(X) :- #sum{C,A,B : inPath(A,B,C)}=X. 
+% bestLocation(X) :- end(X), reached(X).
+%:~ inPath(X,Y,C). [C@1,X,Y]
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% NEW APPROACH
+% inRealStart(Start) | outRealStart(Start) :- start(Start).
+% inRealEnd(End) | outRealEnd(End) :- end(End).
+
+% :- #count{X : inRealStart(X)}=Z, Z!=1.
+% :- #count{X : inRealEnd(X)}=Z, Z!=1.
+
+% inPath(X,Y,C) | outPath(X,Y,C) :- distance(X,Y,C).
+% reached(X) :- inRealStart(X).
+% reached(X) :- inPath(Y,X,C), reached(Y).
+% :- inPath(X,Y,_), inPath(X,Y1,_), Y!=Y1.
+% :- inPath(X,Y,_), inPath(X1,Y,_), X!=X1.
+% :- inRealEnd(X), not reached(X).
+% totalDistance(X) :- #sum{C,A,B : inPath(A,B,C)}=X. 
+% bestLocation(X) :- inRealEnd(X), reached(X).
+%:~ inPath(X,Y,C). [C@1,X,Y]
+
+
+%%% Optimized Approach
+% Shortest Path among all possible paths between start and end, only one path will be chosen (one start and one end point)
+
+inRealStart(Start) | outRealStart(Start) :- start(Start).
+inRealEnd(End) | outRealEnd(End) :- end(End).
+
+:- #count{X : inRealStart(X)}=Z, Z!=1.
+:- #count{X : inRealEnd(X)}=Z, Z!=1.
+
 inPath(X,Y,C) | outPath(X,Y,C) :- distance(X,Y,C).
-reached(X) :- start(X).
+reached(X) :- inRealStart(X).
 reached(X) :- inPath(Y,X,C), reached(Y).
+
+% there must not be two arcs starting at the same node
 :- inPath(X,Y,_), inPath(X,Y1,_), Y!=Y1.
+
+% there must not be two arcs ending at the same node
 :- inPath(X,Y,_), inPath(X1,Y,_), X!=X1.
-:- #count{X : end(X), reached(X)}=Y, Y!=1. % Only one end point reached
-totalDistance(X) :- #sum{C,A,B : inPath(A,B,C)}=X. 
-bestLocation(X) :- end(X), reached(X).
+
+% there aren't outward arcs from Real End node
+:- inPath(X,Y,_), inRealEnd(X).
+
+% there aren't inward arcs to Real Start node
+:- inPath(X,Y,_), inRealStart(Y).
+
+% The path must reach the real end node
+:- inRealEnd(X), not reached(X).
+
+% don't include in path if the node has not been reached
+:- inPath(X,Y,_), not reached(Y).
+
 :~ inPath(X,Y,C). [C@1,X,Y]
