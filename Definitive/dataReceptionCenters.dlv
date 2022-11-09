@@ -1,0 +1,94 @@
+% % receptionCenter(ID,City,People_Capacity)
+% receptionCenter("01","Wroclaw",50).
+% receptionCenter("02","Torun",50).
+% receptionCenter("03","Bydgoszcz",50).
+% receptionCenter("04","Gorzow",50).
+% receptionCenter("05","Wasilkow",50).
+% receptionCenter("06","Kielce",50).
+% receptionCenter("07","Olsztyn",50).
+% receptionCenter("08","Poznań",50).
+% receptionCenter("09","Szczecin",50).
+% receptionCenter("10","Lodz",50).
+% receptionCenter("11","Krakow",50).
+% receptionCenter("12","Warszawa",1500).
+% receptionCenter("13","Opole",50).
+% receptionCenter("14","Gdansk",50).
+% receptionCenter("15","Katowice",50).
+% receptionCenter("A","Dorohusk-Osada",50).
+% receptionCenter("B","Dolhobyczow",50).
+% receptionCenter("C","Horodlo",50).
+% receptionCenter("D","Lubycza Krolewska",50).
+% receptionCenter("E","Chelm",50).
+% receptionCenter("F","Hrubieszow",50).
+% receptionCenter("G","Tomaszow Lubelski",50).
+% receptionCenter("H","Przemysl",50).
+% receptionCenter("I","Mlyny",50).
+% receptionCenter("J","Lodyna",50).
+% receptionCenter("K","Krowica",50).
+% receptionCenter("L","Medyka",50).
+% receptionCenter("M","Korczowa",50).
+
+%voivodship(City,Voivodship)
+voivodship("Wroclaw","Dolnoslaskie").
+voivodship("Torun","Kujawsko-Pomorskie").
+voivodship("Bydgoszcz","Kujawsko-Pomorskie").
+voivodship("Gorzow","Lubuskie").
+voivodship("Wasilkow","Podlaskie").
+voivodship("Kielce","Swietokrzyskie").
+voivodship("Olsztyn","Warminsko-Mazurskie").
+voivodship("Poznan","Wielkopolskie").
+voivodship("Szczecin","Zachodniopomorskie").
+voivodship("Lodz","Lodzkie").
+voivodship("Krakow","Malopolskie").
+voivodship("Warszawa","Mazowieckie").
+voivodship("Opole","Opolskie").
+voivodship("Gdansk","Pomorskie").
+voivodship("Katowice","Slaskie").
+voivodship("Dorohusk-Osada","Lubelskie").
+voivodship("Dolhobyczow","Lubelskie").
+voivodship("Horodlo","Lubelskie").
+voivodship("Lubycza Krolewska","Lubelskie").
+voivodship("Chelm","Lubelskie").
+voivodship("Hrubieszow","Lubelskie").
+voivodship("Tomaszow Lubelski","Lubelskie").
+voivodship("Przemysl","Podkarpackie").
+voivodship("Mlyny","Podkarpackie").
+voivodship("Lodyna","Podkarpackie").
+voivodship("Krowica","Podkarpackie").
+voivodship("Medyka","Podkarpackie").
+voivodship("Korczowa","Podkarpackie").
+voivodship("Rzeszow","Podkarpackie").
+
+
+receptionCenter("wr1","Wroclaw",150).
+receptionCenter("wr2","Wroclaw",150).
+receptionCenter("r2","Torun",50).
+receptionCenter("r3","Bydgoszcz",50).
+receptionCenter("r4","Gorzow",50).
+receptionCenter("r5","Wasilkow",50).
+receptionCenter("r6","Kielce",50).
+receptionCenter("r7","Olsztyn",50).
+receptionCenter("r8","Poznań",50).
+receptionCenter("r9","Szczecin",50).
+receptionCenter("r10","Lodz",50).
+receptionCenter("krk11","Krakow",50).
+receptionCenter("krk11","Krakow",50).
+receptionCenter("krk11","Krakow",50).
+receptionCenter("r11","Krakow",50).
+receptionCenter("r12","Warszawa",1500).
+receptionCenter("r13","Opole",50).
+receptionCenter("r14","Gdansk",50).
+receptionCenter("r15","Katowice",50).
+% receptionCenter("r16","Dorohusk-Osada",50).
+% receptionCenter("r17","Dolhobyczow",50).
+% receptionCenter("r18","Horodlo",50).
+% receptionCenter("r19","Lubycza Krolewska",50).
+% receptionCenter("r20","Chelm",50).
+% receptionCenter("r21","Hrubieszow",50).
+receptionCenter("r22","Tomaszow Lubelski",150).
+receptionCenter("r23","Przemysl",50).
+receptionCenter("r24","Mlyny",150).
+% receptionCenter("r25","Lodyna",50).
+% receptionCenter("r26","Krowica",50).
+% receptionCenter("r27","Medyka",50).
+% receptionCenter("r28","Korczowa",50).

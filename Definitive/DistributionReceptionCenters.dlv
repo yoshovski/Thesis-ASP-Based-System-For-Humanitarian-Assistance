@@ -1,0 +1,107 @@
+#show inReceptionCenter/2.
+
+%%% REFUGEES %%%
+%% 1. Assign refugees to age groups
+
+%% MODEL %%
+
+%% DATA %%
+% person(ID,FullName,Age,Gender,Location).
+% Gender -> M: male, F: female, O: other
+% location -> The location of the person
+% person(p1,"John Smith",20,"M").
+% person(p2,"Jane Smith",18,"F").
+% person(p3,"Kate Carter",30,"O").
+
+% relatives(ID1,ID2).
+% ID of two person who have a relation (parent-child, sibling, etc.)
+% ex. If John is father of Jane, ID of John is 1 and ID of Jane is 2
+% relatives(1,2).
+relatives(P,P1) :- relatives(P1,P).
+
+% ageGroup(ID,L_Age,U_Age).
+% Age Group: The suddivision of the population into different age groups.
+% L_Age -> lower bound of the age group (included)
+% U_Age -> upper bound of the age group (included)
+ageGroup(a1,0,4).
+ageGroup(a2,5,11).
+ageGroup(a3,12,17).
+ageGroup(a4,18,59).
+ageGroup(a5,60,200).
+
+% hotspot(ID,Name,City).
+% capacity is related to the number of people that can be hosted in the hotspot
+% Hotspot is a collective center where the first identification takes place and where health care is provided.
+% hotspot(h1,"Hotspot1","Krakow").
+
+% receptionCenter(ID,City,People_Capacity).
+% Reception Center: A structure which has the purpose of receiving refugees and giving them the first aid
+% receptionCenter(r1,"Krakow",20).
+% receptionCenter(r3,"Krakow",20).
+% receptionCenter(r4,"Krakow",50).
+% receptionCenter(r5,"Krakow",300).
+% receptionCenter(r6,"Krakow",30).
+% receptionCenter(r7,"Krakow",2).
+% receptionCenter(r2,"Warsaw",50).
+% People assigned to a reception center
+% inReceptionCenter(p2,r1).
+% inReceptionCenter(p3,r1).
+
+
+
+
+
+%% RULES %%
+% 1. Assign refugees to age groups
+inAgeGroup(PersonID,AgeGroupID) :- person(PersonID,_,Age,_,_), ageGroup(AgeGroupID,L_Age,U_Age), Age >= L_Age, Age <= U_Age.
+
+%inReceptionCenter(p3,r1).
+
+% Previosuly assigned to a reception center / Manually assigned
+%assignedToReceptionCenter(P,RC).
+
+canBeAssigned(P,RC) :- person(P,_,_,_,City), receptionCenter(RC,City,_).%, voivodship(City,Region).
+
+
+% Guess and Check, assign a person (refugee) to a reception center
+%inReceptionCenter(P,RC) | outReceptionCenter(P,RC) :- person(P,_,_,_,_), receptionCenter(RC,_,_).
+inReceptionCenter(P,RC) | outReceptionCenter(P,RC) :- canBeAssigned(P,RC).
+
+% Summarize the guess and check rule, rule 1 and can be assigned rule
+%0 <= {inReceptionCenter(P,RC) : receptionCenter(RC,L,_)} <=1 :- person(P,_,_,_,L).
+
+% rule 1: One person can be assigned to only one reception center
+:- inReceptionCenter(P,RC1), inReceptionCenter(P,RC2), RC1 != RC2.
+
+% Capacity of a reception center is respected
+:- receptionCenter(RC,_,Cap), #count{P:inReceptionCenter(P,RC)} > Cap.
+
+% It mustn't happen that a person is in a reception center but his relative is not
+% Relatives of a person must be in the same reception center
+:- inReceptionCenter(P,RC), relatives(P,P1), not inReceptionCenter(P1,RC).
+
+% maximize the number of people assigned to a reception center
+% All refugees are assigned to a reception center
+% There are no refugees that are not assigned to a reception center
+isPersonAssigned(P) :- inReceptionCenter(P,_).
+:~ person(P,_,_,_,_), not isPersonAssigned(P). [1@4,P]
+
+% Minimize the number of reception centers used
+% Tend to assign people to the same reception center
+:~ inReceptionCenter(P,RC), inReceptionCenter(P1,RC1), person(P,_,_,_,L), person(P1,_,_,_,L), receptionCenter(_,L,_), P!=P1, RC!=RC1. [1@3,P,P1]
+
+% Maximise the number of people from the same age group who are assigned in the same reception center
+% People from the same age group must be assigned in the same reception center
+:~ inReceptionCenter(P,RC), inReceptionCenter(P1,RC), inAgeGroup(P,A), inAgeGroup(P1,A1), P!=P1, A!=A1. [1@1,P,RC]
+
+% When there is a huge number of refugees, give priority to a queue
+% Assign people with fewer number of id to a reception center
+:~ inReceptionCenter(P,RC), inReceptionCenter(P1,RC1), P>P1. [P@2,P,P1]
+
+
+% % Total number of people not assigned to a reception center
+% totalNotAssigned(N) :- #count{P : not isPersonAssigned(P), person(P,_,_,_)}=N.
+
+
+%%%% TEST
+

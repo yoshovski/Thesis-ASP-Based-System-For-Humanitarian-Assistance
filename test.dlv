@@ -1,0 +1,8 @@
+#show inRC/2.
+
+person(p1,krakow).
+person(p2,krakow).
+rc(r1,krakow).
+rc(r2,krakow).
+
+0 <= {inRC(P,RC) : rc(RC,L)} <=1 :- person(P,L).

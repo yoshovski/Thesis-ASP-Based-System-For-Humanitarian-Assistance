@@ -9,58 +9,58 @@
 %#show shift/5.
 #show inShift/3.
 
-%%% REFUGEES %%%
-%% 1. Assign refugees to age groups
+% %%% REFUGEES %%%
+% %% 1. Assign refugees to age groups
 
-%% MODEL %%
+% %% MODEL %%
 
-%% DATA %%
-% person(ID,FullName,Age,Gender,DateArrival,Hotspot).
-% Gender -> M: male, F: female, O: other
-person(p1,"John Smith",20,"M", d1,h1).
-person(p2,"Jane Smith",18,"F",d2,h1).
-person(p3,"Kate Carter",30,"O",d3,h1).
+% %% DATA %%
+% % person(ID,FullName,Age,Gender,DateArrival,Hotspot).
+% % Gender -> M: male, F: female, O: other
+% person(p1,"John Smith",20,"M", d1,h1).
+% person(p2,"Jane Smith",18,"F",d2,h1).
+% person(p3,"Kate Carter",30,"O",d3,h1).
 
-% date(ID,Day,Month,Year).
-date(d1,24,2,2022).
+% % date(ID,Day,Month,Year).
+% date(d1,24,2,2022).
 
-% relatives(ID1,ID2).
-% ID of two person who have a relation (parent-child, sibling, etc.)
-% ex. If John is father of Jane, ID of John is 1 and ID of Jane is 2
-relatives(1,2).
+% % relatives(ID1,ID2).
+% % ID of two person who have a relation (parent-child, sibling, etc.)
+% % ex. If John is father of Jane, ID of John is 1 and ID of Jane is 2
+% relatives(1,2).
 
-% ageGroup(ID,L_Age,U_Age).
-% Age Group: The suddivision of the population into different age groups.
-% L_Age -> lower bound of the age group (included)
-% U_Age -> upper bound of the age group (included)
-ageGroup(a1,0,18).
-ageGroup(a2,19,25).
-ageGroup(a3,26,39).
-ageGroup(a4,40,59).
-ageGroup(a5,60,75).
-ageGroup(a6,76,200).
+% % ageGroup(ID,L_Age,U_Age).
+% % Age Group: The suddivision of the population into different age groups.
+% % L_Age -> lower bound of the age group (included)
+% % U_Age -> upper bound of the age group (included)
+% ageGroup(a1,0,18).
+% ageGroup(a2,19,25).
+% ageGroup(a3,26,39).
+% ageGroup(a4,40,59).
+% ageGroup(a5,60,75).
+% ageGroup(a6,76,200).
 
-% hotspot(ID,Name,City).
-% capacity is related to the number of people that can be hosted in the hotspot
-% Hotspot is a collective center where the first identification takes place and where health care is provided.
-hotspot(h1,"Hotspot1","Krakow").
+% % hotspot(ID,Name,City).
+% % capacity is related to the number of people that can be hosted in the hotspot
+% % Hotspot is a collective center where the first identification takes place and where health care is provided.
+% hotspot(h1,"Hotspot1","Krakow").
 
-% receptionCenter(ID,City,People_Capacity).
-% Reception Center: A structure which has the purpose of receiving refugees and giving them the first aid
-receptionCenter(r1,"Krakow",100).
-receptionCenter(r2,"Warsaw",200).
+% % receptionCenter(ID,City,People_Capacity).
+% % Reception Center: A structure which has the purpose of receiving refugees and giving them the first aid
+% receptionCenter(r1,"Krakow",100).
+% receptionCenter(r2,"Warsaw",200).
 
-% People assigned to a reception center
-inReceptionCenter(p2,r1).
-inReceptionCenter(p3,r1).
+% % People assigned to a reception center
+% inReceptionCenter(p2,r1).
+% inReceptionCenter(p3,r1).
 
-% People assigned to a hotspot
-inHotspot(p1,h1).
+% % People assigned to a hotspot
+% inHotspot(p1,h1).
 
 
-%% RULES %%
-% 1. Assign refugees to age groups
-inAgeGroup(PersonID,AgeGroupID) :- person(PersonID,_,Age,_,_,_), ageGroup(AgeGroupID,L_Age,U_Age), Age >= L_Age, Age <= U_Age.
+% %% RULES %%
+% % 1. Assign refugees to age groups
+% inAgeGroup(PersonID,AgeGroupID) :- person(PersonID,_,Age,_,_,_), ageGroup(AgeGroupID,L_Age,U_Age), Age >= L_Age, Age <= U_Age.
 
 
 
@@ -88,6 +88,8 @@ inAgeGroup(PersonID,AgeGroupID) :- person(PersonID,_,Age,_,_,_), ageGroup(AgeGro
 % absent(VolunteerID,ShiftID).
 
 %% DATA %%
+receptionCenter(r1,"Krakow",100).
+receptionCenter(r2,"Warsaw",200).
 
 % volunteer(VolunteerID,Name,From).
 volunteer(v1,"Mark Carter","Krakow").
@@ -105,10 +107,10 @@ canPerformRole(v2,"translator").
 preferredRole(v1,"doctor",1).
 preferredRole(v2,"translator",1).
 
-% preferedLocation(VolunteerID,Location,Priority).
-% Volunteers will be assigned to their location of origin,otherwise they will be assigned to the location with the highest priority
+% preferedLocation(VolunteerID,Location,Range).
+% Volunteers will be assigned to their location of origin,otherwise they will be assigned to the location within the range specified
 % Location -> the location where the volunteer prefers to be assigned
-% Priority -> the priority of the preference (1 is the highest priority)
+% Range -> the range of distance within the volunteer wants to be assigned
 preferredLocation(v1,"Krakow",1).
 
 % A volunteer can have specific amount of time that he can work per week
@@ -130,12 +132,14 @@ availableOnDay(v1,"Tuesday").
 % isUnavailable(VolunteerID).
 % A volunteer can become unavailable for indefinite time (e.g. due to illness, not wanting to offer volunteer work anymore, etc.)
 
-% requiredRole(ReceptionCenterID,Role).
+
+% A reception center can have minimum requirements for volunteers with specific role
+% requiredRole(ReceptionCenterID,Role,Min_Number).
 % ReceptionCenterID -> the id of the reception center where the role is required
 % Role -> the role that is required
-requiredRole(r1,"nurse").
-requiredRole(r1,"doctor").
-requiredRole(r1,"translator").
+requiredRoleRC(r1,"nurse",2).
+requiredRoleRC(r1,"doctor",1).
+requiredRoleRC(r1,"translator",1).
 
 % shift(ShiftID,ReceptionCenter,Day,Start,End).
 % Day -> the day of the week when the shift takes place (monday, tuesday, wednesday, thursday, friday, saturday, sunday)
@@ -148,17 +152,23 @@ shift(4,r1,"monday",1,7).
 
 %% RULES %%
 
+
+
 inShift(VolunteerID,ShiftID,Role) | outShift(VolunteerID,ShiftID,Role) :- 
     volunteer(VolunteerID,_,_), shift(ShiftID,_,_,_,_), canPerformRole(VolunteerID,Role).
 
 %% Each volunteer is assiggned to at least one shift
 :- volunteer(VolunteerID,_), #count{VolunteerID : inShift(VolunteerID,_,_)} != 1.
 
-%% Each volunteer can perform only one role at a time
+%% Each volunteer can perform only one role at a time in a shift
 :- inShift(VolunteerID,ShiftID,Role1), inShift(VolunteerID,ShiftID,Role2), Role1 != Role2.
 
 %% Each volunteer can perform only roles that he can perform
 :- inShift(VolunteerID,_,Role), not canPerformRole(VolunteerID,Role).
+
+% A minimum number of volunteers is required for some roles in some reception centers
+% This means that all shifts in which the role is required must have at least the minimum number of volunteers assigned
+%:~ shift(ShiftID,RC,_,_,_), requiredRoleRC(RC,Role,Min_Number), #count{V : inShift(V,ShiftID,Role)}=N, N < Min_Number, C = Min_Number - N. [C@2]
 
 %% All shifts are covered
 % :- shift(ShiftID,_,_,_,_), #count{VolunteerID : inShift(VolunteerID,ShiftID,_)} == 0.

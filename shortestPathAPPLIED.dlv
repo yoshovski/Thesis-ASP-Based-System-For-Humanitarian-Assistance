@@ -1,112 +1,5 @@
-% #show totalDistance/2.
-% #show suitableReceptionCenter/2.
-
-% volunteer(v1,"Mark Carter","Krakow").
-% volunteer(v2,"Mark Carter","Krakow").
-% % preferredLocation(v1,"A",10).
-% % preferredLocation(v2,"B",10).
-
-% receptionCenter(r1,"C",100).
-% receptionCenter(r2,"E",100).
-
-% city("A").
-% city("B").
-% city("C").
-% city("D").
-% city("E").
-
-% distance("A","B",5).
-% distance("A","C",2).
-% distance("A","D",3).
-% distance("D","B",1).
-% distance("D","E",2).
-% distance("C","E",1).
-
-% node(X) :- city(X). % city is a node
-% arc(X,Y,Cost) :- distance(X,Y,Cost). % The distance between two cities is the cost of the arc between them
-% arc(X,Y,Cost) :- arc(Y,X,Cost). % Double the arcs to make the graph undirected
-
-% start(V,X) :- preferredLocation(V,X,_). % The start node X is the preferred location of the volunteer V
-% end(RC,X) :- receptionCenter(RC,X,_). % The end node X is the reception center RC
-
-% % Guess and check, consider one node at a time for each volunteer as an end node X, the others will be considered as intermediate nodes
-% inRealEnd(V,RC,X) | outRealEnd(V,RC,X) :- end(RC,X), start(V,_). % The real end node is the reception center
-
-% % Guess and Check approach, to find all the paths from a node to another (from N1 to N2) for each preference of each volunteer
-% inPath(V,X,Y,Cost) | outPath(V,X,Y,Cost) :- arc(X,Y,Cost), preferredLocation(V,_,_).
-
-% %Only one RealEnd node for each volunteer
-% :- #count{V : inRealEnd(V,_,_)}=N, start(V,_), N!=1.
-
-% % Starting node X of the path for volunteer V
-% reached(V,X) :- start(V,X).
-
-% % Transition from one node to another for volunteer V
-% reached(V,X) :- inPath(V,Y,X,Cost), reached(V,Y).
-
-% % there must not be two arcs starting at the same node
-% :- inPath(V,X,Y,_), inPath(V,X,Y1,_), Y!=Y1.
-
-% % there must not be two arcs ending in the same node
-% :- inPath(V,X,Y,_), inPath(V,X1,Y,_), X!=X1.
-
-% % The path must reach the real end node
-% :- inRealEnd(V,_,X), not reached(V,X).
-
-% % Number of outward arcs for each reached node
-% outward(V,X,N) :- reached(V,X), #count{V,X,Y : inPath(V,X,Y,_)}=N.
-
-% % Number of inward arcs for each reached node
-% inward(V,Y,N) :- reached(V,Y), #count{V,X,Y : inPath(V,X,Y,_)}=N.
-
-% % The number of outward arcs from a RealEnd point must be less or equal to 1
-% :- outward(V,X,N), inRealEnd(V,_,X), N>0.
-
-% % The number of inward arcs in a RealEnd point must be zero
-% :- inward(V,X,N), inRealEnd(V,_,X), N<1.
-
-% % the number of outward arcs and inward arcs from start is less or equal to 1
-% :- inward(V,X,N), outward(V,X,M), start(V,X), N+M>1.
-
-% % don't include in path if the node has not been reached
-% :- inPath(V,X,Y,_), not reached(V,Y).
-
-% % Total distance X to be traveled by each volunteer V
-% totalDistance(V,X) :- #sum{C,V,A,B : inPath(V,A,B,C)}=X, start(V,_).
-
-% % The distance traveled by each volunteer must be less or equal to the maximum distance range he prefers
-% % However, it might happen that it is not possible to satisfy the preferences of all the volunteers, because it is a requirement
-% % To avoid not obtaining a solution, it is necessary to maximize the number of volunteers that can be satisfied
-
-% % The volunteer V is assigned to a Reception Center RC within a range of distance X from the preferred location of the volunteer.
-% suitableReceptionCenter(V,RC) :- inRealEnd(V,RC,_), totalDistance(V,X), preferredLocation(V,_,MaxRange), X<=MaxRange.
-
-% % Number of all volunteers with preferred Location
-% totalVolunteers(N) :- #count{V : preferredLocation(V,_,_)}=N.
-
-% % Maximize the number of volunteers able to be assigned to a reception center (high priority)
-% % Pay for each volunteer not suitable for a reception center (who can't be assigned to a reception center)
-% %:~ #count{V,RC : suitableReceptionCenter(V,RC)}=X, totalVolunteers(N), Z=N-X. [Z@2]
-
-% % #show notAssigned/1.
-% % #show inRealEnd/3.
-% % suit(V) :- suitableReceptionCenter(V,_).
-% % notAssigned(V) :- volunteer(V,_,_), not suit(V).
-
-% %:~ volunteer(V,_,_), not suitableReceptionCenter(V,RC), receptionCenter(RC,_,_). [1@2]
-
-% % Minimize the distance traveled by each volunteer
-% % Pay for the distance traveled by each volunteer, who is suitable for a reception center
-% :~ totalDistance(V,Cost), suitableReceptionCenter(V,_). [Cost@1,V]
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% NEW APPROACH OPTIMIZATION
-% All possible paths between start and end nodes
-
-#show inPath/3.
-#show reached/1.
-#show totalDistance/3.
+#show totalDistance/2.
+#show suitableReceptionCenter/2.
 
 volunteer(v1,"Mark Carter","Krakow").
 volunteer(v2,"Mark Carter","Krakow").
@@ -133,41 +26,148 @@ node(X) :- city(X). % city is a node
 arc(X,Y,Cost) :- distance(X,Y,Cost). % The distance between two cities is the cost of the arc between them
 arc(X,Y,Cost) :- arc(Y,X,Cost). % Double the arcs to make the graph undirected
 
-% The start node X is the preferred location of a volunteer, more volunteers can have the same preferred location
-% therefore the start node can be repeated
-start(X) :- preferredLocation(_,X,_). 
+start(V,X) :- preferredLocation(V,X,_). % The start node X is the preferred location of the volunteer V
+end(RC,X) :- receptionCenter(RC,X,_). % The end node X is the reception center RC
 
-% The end node X is the location center of a reception center, more reception centers can have the same location
-% therefore the end node can be repeated
-end(X) :- receptionCenter(_,X,_).
+% Guess and check, consider one node at a time for each volunteer as an end node X, the others will be considered as intermediate nodes
+inRealEnd(V,RC,X) | outRealEnd(V,RC,X) :- end(RC,X), start(V,_). % The real end node is the reception center
 
-inRealStart(Start) | outRealStart(Start) :- start(Start).
-inRealEnd(End) | outRealEnd(End) :- end(End).
+% Guess and Check approach, to find all the paths from a node to another (from N1 to N2) for each preference of each volunteer
+inPath(V,X,Y,Cost) | outPath(V,X,Y,Cost) :- arc(X,Y,Cost), preferredLocation(V,_,_).
 
-:- #count{X : inRealStart(X)}=Z, Z!=1.
-:- #count{X : inRealEnd(X)}=Z, Z!=1.
+%Only one RealEnd node for each volunteer
+:- #count{V : inRealEnd(V,_,_)}=N, start(V,_), N!=1.
 
-inPath(X,Y,C) | outPath(X,Y,C) :- arc(X,Y,C).
-reached(X) :- inRealStart(X).
-reached(X) :- inPath(Y,X,C), reached(Y).
+% Starting node X of the path for volunteer V
+reached(V,X) :- start(V,X).
+
+% Transition from one node to another for volunteer V
+reached(V,X) :- inPath(V,Y,X,Cost), reached(V,Y).
 
 % there must not be two arcs starting at the same node
-:- inPath(X,Y,_), inPath(X,Y1,_), Y!=Y1.
+:- inPath(V,X,Y,_), inPath(V,X,Y1,_), Y!=Y1.
 
-% there must not be two arcs ending at the same node
-:- inPath(X,Y,_), inPath(X1,Y,_), X!=X1.
-
-% there aren't outward arcs from Real End node
-:- inPath(X,Y,_), inRealEnd(X).
-
-% there aren't inward arcs to Real Start node
-:- inPath(X,Y,_), inRealStart(Y).
+% there must not be two arcs ending in the same node
+:- inPath(V,X,Y,_), inPath(V,X1,Y,_), X!=X1.
 
 % The path must reach the real end node
-:- inRealEnd(X), not reached(X).
+:- inRealEnd(V,_,X), not reached(V,X).
+
+% Number of outward arcs for each reached node
+outward(V,X,N) :- reached(V,X), #count{V,X,Y : inPath(V,X,Y,_)}=N.
+
+% Number of inward arcs for each reached node
+inward(V,Y,N) :- reached(V,Y), #count{V,X,Y : inPath(V,X,Y,_)}=N.
+
+% The number of outward arcs from a RealEnd point must be less or equal to 1
+:- outward(V,X,N), inRealEnd(V,_,X), N>0.
+
+% The number of inward arcs in a RealEnd point must be zero
+:- inward(V,X,N), inRealEnd(V,_,X), N<1.
+
+% the number of outward arcs and inward arcs from start is less or equal to 1
+:- inward(V,X,N), outward(V,X,M), start(V,X), N+M>1.
 
 % don't include in path if the node has not been reached
-:- inPath(X,Y,_), not reached(Y).
+:- inPath(V,X,Y,_), not reached(V,Y).
 
-% Total distance Z traveled between the start node and the end node
-totalDistance(Start,End,Z) :- #sum{C,X,Y : inPath(X,Y,C)}=Z, inRealStart(Start), inRealEnd(End).
+% Total distance X to be traveled by each volunteer V
+totalDistance(V,X) :- #sum{C,V,A,B : inPath(V,A,B,C)}=X, start(V,_).
+
+% The distance traveled by each volunteer must be less or equal to the maximum distance range he prefers
+% However, it might happen that it is not possible to satisfy the preferences of all the volunteers, because it is a requirement
+% To avoid not obtaining a solution, it is necessary to maximize the number of volunteers that can be satisfied
+
+% The volunteer V is assigned to a Reception Center RC within a range of distance X from the preferred location of the volunteer.
+suitableReceptionCenter(V,RC) :- inRealEnd(V,RC,_), totalDistance(V,X), preferredLocation(V,_,MaxRange), X<=MaxRange.
+
+% Number of all volunteers with preferred Location
+totalVolunteers(N) :- #count{V : preferredLocation(V,_,_)}=N.
+
+% Maximize the number of volunteers able to be assigned to a reception center (high priority)
+% Pay for each volunteer not suitable for a reception center (who can't be assigned to a reception center)
+%:~ #count{V,RC : suitableReceptionCenter(V,RC)}=X, totalVolunteers(N), Z=N-X. [Z@2]
+
+% #show notAssigned/1.
+% #show inRealEnd/3.
+% suit(V) :- suitableReceptionCenter(V,_).
+% notAssigned(V) :- volunteer(V,_,_), not suit(V).
+
+%:~ volunteer(V,_,_), not suitableReceptionCenter(V,RC), receptionCenter(RC,_,_). [1@2]
+
+% Minimize the distance traveled by each volunteer
+% Pay for the distance traveled by each volunteer, who is suitable for a reception center
+:~ totalDistance(V,Cost), suitableReceptionCenter(V,_). [Cost@1,V]
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% %%% NEW APPROACH OPTIMIZATION
+% % All possible paths between start and end nodes
+
+% #show inPath/3.
+% #show reached/1.
+% #show totalDistance/3.
+
+% volunteer(v1,"Mark Carter","Krakow").
+% volunteer(v2,"Mark Carter","Krakow").
+% preferredLocation(v1,"A",10).
+% preferredLocation(v2,"B",10).
+
+% receptionCenter(r1,"C",100).
+% receptionCenter(r2,"E",100).
+
+% city("A").
+% city("B").
+% city("C").
+% city("D").
+% city("E").
+
+% distance("A","B",5).
+% distance("A","C",2).
+% distance("A","D",3).
+% distance("D","B",1).
+% distance("D","E",2).
+% distance("C","E",1).
+
+% node(X) :- city(X). % city is a node
+% arc(X,Y,Cost) :- distance(X,Y,Cost). % The distance between two cities is the cost of the arc between them
+% arc(X,Y,Cost) :- arc(Y,X,Cost). % Double the arcs to make the graph undirected
+
+% % The start node X is the preferred location of a volunteer, more volunteers can have the same preferred location
+% % therefore the start node can be repeated
+% start(X) :- preferredLocation(_,X,_). 
+
+% % The end node X is the location center of a reception center, more reception centers can have the same location
+% % therefore the end node can be repeated
+% end(X) :- receptionCenter(_,X,_).
+
+% inRealStart(Start) | outRealStart(Start) :- start(Start).
+% inRealEnd(End) | outRealEnd(End) :- end(End).
+
+% :- #count{X : inRealStart(X)}=Z, Z!=1.
+% :- #count{X : inRealEnd(X)}=Z, Z!=1.
+
+% inPath(X,Y,C) | outPath(X,Y,C) :- arc(X,Y,C).
+% reached(X) :- inRealStart(X).
+% reached(X) :- inPath(Y,X,C), reached(Y).
+
+% % there must not be two arcs starting at the same node
+% :- inPath(X,Y,_), inPath(X,Y1,_), Y!=Y1.
+
+% % there must not be two arcs ending at the same node
+% :- inPath(X,Y,_), inPath(X1,Y,_), X!=X1.
+
+% % there aren't outward arcs from Real End node
+% :- inPath(X,Y,_), inRealEnd(X).
+
+% % there aren't inward arcs to Real Start node
+% :- inPath(X,Y,_), inRealStart(Y).
+
+% % The path must reach the real end node
+% :- inRealEnd(X), not reached(X).
+
+% % don't include in path if the node has not been reached
+% :- inPath(X,Y,_), not reached(Y).
+
+% % Total distance Z traveled between the start node and the end node
+% totalDistance(Start,End,Z) :- #sum{C,X,Y : inPath(X,Y,C)}=Z, inRealStart(Start), inRealEnd(End).
