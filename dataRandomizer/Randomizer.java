@@ -198,4 +198,24 @@ public class Randomizer {
         return "relative(" + personId + "," + relativeId + ").";
     }
 
+    private ArrayList<String> randomizeList(ArrayList<String> data){
+        Collections.shuffle(data);
+        return data;
+    }
+
+    private String componeAtom(String name, String body){
+        return name + "(" + body + ").";
+    }
+
+    private void toTxt(ArrayList<String> data, String filename) throws IOException {
+        File file = new File("dataRandomizer/"+filename+".txt");
+        FileWriter fileWriter = new FileWriter(file);
+        for (int i = 0; i < data.size(); i++) {
+            fileWriter.write(data.get(i));
+            fileWriter.write("\r\n");
+        }
+        fileWriter.close();
+    }
+
+
 }

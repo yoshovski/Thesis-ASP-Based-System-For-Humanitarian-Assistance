@@ -101,30 +101,123 @@
 
 %%% Optimized Approach Applied with Volunteers (WORKING)
 
-city("A").
-city("B").
-city("C").
-city("D").
-city("E").
 
-distance("A","B",5).
-distance("A","C",2).
-distance("A","D",3).
-distance("D","B",1).
-distance("D","E",2).
-distance("C","E",1).
+%%% DATA
+
+distance("Szczecin","Gorzow",105).
+distance("Gorzow","Poznan",136).
+distance("Poznan","Wroclaw",183).
+distance("Wroclaw","Opole",97).
+distance("Opole","Katowice",104).
+distance("Katowice","Krakow",82).
+distance("Krakow","Kielce",114).
+distance("Krakow","Rzeszow",168).
+distance("Rzeszow","Przemysl",92).
+distance("Kielce","Warszawa",181).
+distance("Katowice","Lodz",205).
+distance("Lodz","Warszawa",140).
+distance("Poznan","Lodz",212).
+distance("Lodz","Torun",183).
+distance("Torun","Bydgoszcz",46).
+distance("Torun","Gdansk",170).
+distance("Gdansk","Olsztyn",182).
+distance("Olsztyn","Warszawa",215).
+distance("Warszawa","Bialystok",200).
+distance("Bialystok","Olsztyn",225).
+distance("Gdansk","Szczecin",361).
+distance("Warszawa","Lublin",173).
+distance("Rzeszow","Lublin",177).
+distance("Chelm","Lublin",70).
+distance("Tomaszow Lubelski","Lublin",125).
+
+
+
+% % receptionCenter(ID,City,People_Capacity)
+% receptionCenter("01","Wroclaw",50).
+% receptionCenter("02","Torun",50).
+% receptionCenter("03","Bydgoszcz",50).
+% receptionCenter("04","Gorzow",50).
+% receptionCenter("05","Wasilkow",50).
+% receptionCenter("06","Kielce",50).
+% receptionCenter("07","Olsztyn",50).
+% receptionCenter("08","Poznań",50).
+% receptionCenter("09","Szczecin",50).
+% receptionCenter("10","Lodz",50).
+% receptionCenter("11","Krakow",50).
+% receptionCenter("12","Warszawa",1500).
+% receptionCenter("13","Opole",50).
+% receptionCenter("14","Gdansk",50).
+% receptionCenter("15","Katowice",50).
+% receptionCenter("A","Dorohusk-Osada",50).
+% receptionCenter("B","Dolhobyczow",50).
+% receptionCenter("C","Horodlo",50).
+% receptionCenter("D","Lubycza Krolewska",50).
+% receptionCenter("E","Chelm",50).
+% receptionCenter("F","Hrubieszow",50).
+% receptionCenter("G","Tomaszow Lubelski",50).
+% receptionCenter("H","Przemysl",50).
+% receptionCenter("I","Mlyny",50).
+% receptionCenter("J","Lodyna",50).
+% receptionCenter("K","Krowica",50).
+% receptionCenter("L","Medyka",50).
+% receptionCenter("M","Korczowa",50).
+
+%%%
+
+% city("A").
+% city("B").
+% city("C").
+% city("D").
+% city("E").
+
+% distance("A","B",5).
+% distance("A","C",2).
+% distance("A","D",3).
+% distance("D","B",1).
+% distance("D","E",2).
+% distance("C","E",1).
 
 distance(X,Y,Z) :- distance(Y,X,Z).
 
 
-maxLocationRange(v1,"A",20).
-maxLocationRange(v2,"B",4).
+maxLocationRange(v1,"Katowice",300).
+maxLocationRange(v2,"Krakow",200).
 
 % preferredLocation(v1,"A",10).
 % preferredLocation(v2,"B",10).
 
-receptionCenter(r1,"C",100).
-receptionCenter(r2,"E",100).
+% receptionCenter(r1,"C",100).
+% receptionCenter(r2,"E",100).
+
+receptionCenter("01","Wroclaw",50).
+receptionCenter("02","Torun",50).
+receptionCenter("03","Bydgoszcz",50).
+receptionCenter("04","Gorzow",50).
+%receptionCenter("05","Wasilkow",50).
+receptionCenter("06","Kielce",50).
+receptionCenter("07","Olsztyn",50).
+receptionCenter("08","Poznań",50).
+receptionCenter("09","Szczecin",50).
+receptionCenter("10","Lodz",50).
+receptionCenter("11","Krakow",50).
+receptionCenter("12","Warszawa",1500).
+receptionCenter("13","Opole",50).
+receptionCenter("14","Gdansk",50).
+receptionCenter("15","Katowice",50).
+% receptionCenter("A","Dorohusk-Osada",50).
+% receptionCenter("B","Dolhobyczow",50).
+% receptionCenter("C","Horodlo",50).
+% receptionCenter("D","Lubycza Krolewska",50).
+% receptionCenter("E","Chelm",50).
+% receptionCenter("F","Hrubieszow",50).
+% receptionCenter("G","Tomaszow Lubelski",50).
+% receptionCenter("H","Przemysl",50).
+% receptionCenter("I","Mlyny",50).
+% receptionCenter("J","Lodyna",50).
+% receptionCenter("K","Krowica",50).
+% receptionCenter("L","Medyka",50).
+% receptionCenter("M","Korczowa",50).
+
 
 
 node(X) :- city(X). % city is a node
@@ -169,27 +262,10 @@ totalDistance(X) :- #sum{C,V,A,B : inPath(V,A,B,C)}=X.
 % The distance travelled from start location of the volunteer, must be less than the maximum km range requirement of the volunteer
 :- totalDistance(X), maxLocationRange(V,_,Y), inRealStart(V,_), X>Y. 
 
-#show hee/3.
+#show distantFrom/3.
 % preferredLocation(VolunteerID, Location, Distance).
 % Volunteer -> Id of the volunteer for which the distance from (start to end) the preferred location to the reception center is calculated
 % Location -> The end node of the path (the reception center)
 % Distance -> The distance from the preferred location of the volunteer to the reception center (the cost)
+distantFrom(X,L,D) :- inRealStart(V,X), inRealEnd(L), totalDistance(D).
 
-inHe(S,E,C) | outHe(S,E,C) :- inPath(V,S,E,C), start(V,_), end(E).
-
-hee(X,L,D) :- inRealStart(V,X), inRealEnd(L), totalDistance(D).
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%distantFrom(V,L) :- inRealStart(V,_), inRealEnd(L).
-
-% distantFrom(v2,"E",3).
-% distantFrom(v2,"C",4).
-% distantFrom(v1,"E",8).
-% distantFrom(v1,"E",5).
-% distantFrom(v1,"E",3).
-% distantFrom(v1,"C",9).
-% distantFrom(v1,"C",6).
-% distantFrom(v1,"C",2).
-
-% shortestUniquePath(V,L,D) :- distantFrom(V,L,_), #min{X,V,L : distantFrom(V,L,X)}=D.
