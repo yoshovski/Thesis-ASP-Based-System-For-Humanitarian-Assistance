@@ -169,15 +169,13 @@ totalDistance(X) :- #sum{C,V,A,B : inPath(V,A,B,C)}=X.
 % The distance travelled from start location of the volunteer, must be less than the maximum km range requirement of the volunteer
 :- totalDistance(X), maxLocationRange(V,_,Y), inRealStart(V,_), X>Y. 
 
-#show hee/3.
+#show withinRange/3.
 % preferredLocation(VolunteerID, Location, Distance).
 % Volunteer -> Id of the volunteer for which the distance from (start to end) the preferred location to the reception center is calculated
 % Location -> The end node of the path (the reception center)
 % Distance -> The distance from the preferred location of the volunteer to the reception center (the cost)
 
-inHe(S,E,C) | outHe(S,E,C) :- inPath(V,S,E,C), start(V,_), end(E).
-
-hee(X,L,D) :- inRealStart(V,X), inRealEnd(L), totalDistance(D).
+withinRange(X,L,D) :- inRealStart(V,X), inRealEnd(L), totalDistance(D).
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
