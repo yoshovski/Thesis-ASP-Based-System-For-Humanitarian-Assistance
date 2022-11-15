@@ -43,7 +43,7 @@ volunteer(v3,"John Travolta","Krakow").
 volunteer(v4,"John Travolta","Krakow").
 volunteer(v5,"John Travolta","Krakow").
 
-% canPerformRole(VolunteerID,Role).
+% canPerformRole(VolunteerID,Role). 
 % Role -> nurse, doctor, translator, psychologist 
 canPerformRole(v1,"nurse").
 canPerformRole(v3,"nurse").
@@ -52,13 +52,13 @@ canPerformRole(v4,"nurse").
 canPerformRole(v1,"doctor").
 canPerformRole(v2,"translator").
 
-% preference(VolunteerID,Role,Priority).
-% Role -> the role that the volunteer prefers to perform
-% Priority -> the priority of the preference (1 is the highest priority)
-preferredRole(v1,"doctor",1).
-preferredRole(v2,"translator",1).
+% % preference(VolunteerID,Role,Priority).
+% % Role -> the role that the volunteer prefers to perform
+% % Priority -> the priority of the preference (1 is the highest priority)
+% preferredRole(v1,"doctor",1).
+% preferredRole(v2,"translator",1).
 
-% maxLocationRange(VolunteerID,Location,Range).
+% maxLocationRange(VolunteerID,Location,Range). (OPTIONAL)
 % Volunteers will be assigned to their location of origin,otherwise they will be assigned to the location within the range specified
 % Location -> the location where the volunteer prefers to be assigned
 % Range -> the range of distance within the volunteer wants to be assigned
@@ -77,21 +77,34 @@ withinRange(VolunteerID,RC,Distance) :- volunteer(VolunteerID,_,Location), recep
 % Location -> the location where the volunteer prefers to be assigned
 % Range -> the range of distance within the volunteer wants to be assigned
 
-% A volunteer can have specific amount of time that he can work per week
+% A volunteer can have specific amount of time that he can work per week (MANDATORY)
 % maxHoursPerWeek(VolunteerID,MaxHours).
 maxHoursPerWeek(v1,20).
 
-%legalMaxHours(Daily,Weekly).
+%workingRights(Daily,Weekly,BreakBetweenShift). (ONLY ONE ATOM)
 % Daily -> the maximum number of hours that a volunteer is alowed to work per day
 % Weekly -> the maximum number of hours that a volunteer is allowed to work per week
-legalMaxHours(8,40).
+% BreakBetweenShift -> the minimum number of hours that a volunteer must have between two shifts
+workingRights(8,40,11).
 
-% A volunteer can have specific amout of time that he can work per day
+% A volunteer can have specific amout of time that he can work per day (MANDATORY)
 % maxHoursPerDay(VolunteerID,MaxHours).
 maxHoursPerDay(v1,8).
 maxHoursPerDay(v2,8).
 maxHoursPerDay(v3,8).
 maxHoursPerDay(v4,8).
+
+% Prefered Range of hours for a shift (OPTIONAL)
+% preferredShiftRange(VolunteerID,StartHour,Duration,Day).
+% StartHour -> the earliest hour that the volunteer wants to start working
+% Duration -> Maximum length of time during which the volunteer offers availability to provide service. The shift must be between StartHour and StartHour+Interval
+% Day -> the day of the week for which this preference is valid
+preferredShiftRange(v1,7,4,"mon").
+
+% Volunteers can have preferences for the working hours (not all of them have)
+% hasHourPreference(VolunteerID,Day).
+% Day -> the day of the week for which this preference is valid
+hasHourPreference(V,Day) :- preferredShiftRange(V,_,_,Day).
 
 % A volunteer can be avaialable only for specific days
 % available(VolunteerID,Day).
@@ -108,10 +121,9 @@ day("sun").
 % availableOn(VolunteerID,Days).
 % Days -> a list of days that the volunteer is available (e.g. ["mon","tue","wed","thu","fri","sat","sun"])
 availableOn(v1,["mon","tue","wed","thu","fri","sat","sun"]).
-% availableOn(v2,["mon","tue","wed","thu","fri","sat","sun"]).
-% availableOn(v3,["mon","tue","wed","thu","fri","sat","sun"]).
-% availableOn(v4,["mon","tue","wed","thu","fri","sat","sun"]).
-
+availableOn(v2,["mon","tue","wed","thu","fri","sat","sun"]).
+availableOn(v3,["mon","tue","wed","thu","fri","sat","sun"]).
+availableOn(v4,["mon","tue","wed","thu","fri","sat","sun"]).
 
 % A volunteer can become unavailable for indefinite time (e.g. due to illness, not wanting to offer volunteer work anymore, etc.)
 % isUnavailable(VolunteerID).
@@ -125,16 +137,18 @@ availableOn(v1,["mon","tue","wed","thu","fri","sat","sun"]).
 isAbsentOnShift(V,S) :- shift(S,_,D,_,_), isAbsentOnDay(V,D).
 
 % A reception center can have minimum requirements for volunteers with specific role
-% requiredRoleAt(ReceptionCenterID,Role,Min_Number).
+% requiredRoleAt(ReceptionCenterID,Role,Min_Number,Max_Number).
 % ReceptionCenterID -> the id of the reception center where the role is required
 % Role -> the role that is required
-requiredRoleAt(r1,"nurse",2).
-requiredRoleAt(r1,"nurse",2).
-requiredRoleAt(r1,"doctor",1).
-requiredRoleAt(r1,"translator",1).
+% Min_Number -> the minimum number of volunteers that are required for the role
+% Max_Number -> the maximum number of volunteers that are required for the role
+requiredRoleAt(r1,"nurse",1,5).
+requiredRoleAt(r2,"nurse",2,5).
+requiredRoleAt(r1,"doctor",1,5).
+requiredRoleAt(r1,"translator",1,1).
 
 %% If there is a requirement for a role for a reception center, then the role is required for each shift in the reception center
-requiredRoleForShift(ShiftID,Role,Min) :- requiredRoleAt(RCID,Role,Min), shift(ShiftID,RCID,_,_,_).
+requiredRoleForShift(ShiftID,Role,Min,Max) :- requiredRoleAt(RCID,Role,Min,Max), shift(ShiftID,RCID,_,_,_).
 
 % shift(ShiftID,ReceptionCenter,Day,Start,Duration).
 % Day -> the day of the week when the shift takes place (monday, tuesday, wednesday, thursday, friday, saturday, sunday)
@@ -143,9 +157,8 @@ requiredRoleForShift(ShiftID,Role,Min) :- requiredRoleAt(RCID,Role,Min), shift(S
 % e.g. shift(s1,r1,"Monday",8,8) means that the shift s1 takes place in the reception center r1 on Monday from 8:00 to 16:00
 shift(1,r1,"mon",7,6).
 shift(2,r1,"mon",13,6).
-shift(3,r1,"mon",19,6).
-shift(4,r1,"mon",1,6).
-
+shift(3,r1,"wed",19,6).
+shift(4,r2,"tue",1,6).
 
 %% RULES %%
 % A voliunteer is available for a shift if: (only time and day availability is considered)
@@ -168,7 +181,7 @@ canBeIn(V,S,Role) :-
     Duration <= MaxHoursPerDay,
     withinRange(V,RC,_),
     canPerformRole(V,Role),
-    requiredRoleForShift(S,Role,_).
+    requiredRoleForShift(S,Role,_,_).
 
 inShift(VolunteerID,ShiftID,Role) | outShift(VolunteerID,ShiftID,Role) :- canBeIn(VolunteerID,ShiftID,Role).
 
@@ -181,32 +194,43 @@ inShift(VolunteerID,ShiftID,Role) | outShift(VolunteerID,ShiftID,Role) :- canBeI
 %% Each volunteer can perform only roles that he can perform
 :- inShift(VolunteerID,_,Role), not canPerformRole(VolunteerID,Role).
 
-%% A minimum number of volunteers is required for some roles in some reception centers
-%% This means that all shifts in which the role is required must have at least the minimum number of volunteers assigned
-:~ requiredRoleForShift(ShiftID,Role,Min), #count{VolunteerID : inShift(VolunteerID,ShiftID,Role)}=N, N < Min, Cost=Min-N. [Cost@3,ShiftID]
-
-%% All shifts are covered
+%% All shifts are covered (it may happen that not all shifts are covered if there is lack of volunteers)
 %:- shift(ShiftID,_,_,_,_), #count{VolunteerID : inShift(VolunteerID,ShiftID,_)} == 0.
 
 %% Each volunteer can work only for a maximum number of hours per day
-totalDailyHours(V,Total) :- volunteer(V,_,_), #sum{H,Sh,D : inShift(V,Sh,_), shift(Sh,_,D,_,H)} = Total.
+totalDailyHours(V,Total) :- volunteer(V,_,_), day(D), #sum{H,Sh : inShift(V,Sh,_), shift(Sh,_,D,_,H)} = Total.
 :- totalDailyHours(V,Total), maxHoursPerDay(V,Max), Total > Max.
-:- totalDailyHours(V,Total), legalMaxHours(Daily,_), Total > Daily.
+:- totalDailyHours(V,Total), workingRights(Daily,_,_), Total > Daily.
 
 %% Each volunteer can work only a maximum number of hours per week
 totalWeeklyHours(V,Total) :- volunteer(V,_,_), #sum{H,V,S : inShift(V,S,_), shift(S,_,_,_,H)}=Total.
 :- totalWeeklyHours(V,Total), maxHoursPerWeek(V,Max), Total > Max.
-:- totalWeeklyHours(V,Total), legalMaxHours(_,Weekly), Total > Weekly.
+:- totalWeeklyHours(V,Total), workingRights(_,Weekly,_), Total > Weekly.
+
+%% Each volunteer can be assigned to one reception center for the same day
+:- inShift(V,S,_), inShift(V,S1,_), shift(S,RC,Day,_,_), shift(S1,RC1,Day,_,_), RC != RC1, S != S1.
+
+%% The maximum number of volunteers in a shift must not be exceeded
+:- requiredRoleForShift(S,Role,_,Max), #count{V : inShift(V,S,Role)} > Max.
+
+%% Volunteers cannot be assinged to shifts which don't satisfy their shift range preferences 
+% Some volunteers don't have any range preferences, so they can be assigned to any shift
+satisfyHourPreference(V,Day) :- hasHourPreference(V,Day), preferredShiftRange(V,Ps,Pi,Day), inShift(V,S,_), shift(S,_,Day,Start,Duration), Ps <= Start, Pi+Ps >= Start + Duration.
+:- inShift(V,Sh,_), shift(Sh,_,Day,_,_), not satisfyHourPreference(V,Day), hasHourPreference(V,Day).
+
+%% A minimum number of volunteers is required for some roles in some reception centers
+%% This means that all shifts in which the role is required must have at least the minimum number of volunteers assigned
+% It is written as a weak constraint because it may occur that the minimum number of volunteers is not reached (lack of volunteers)
+:~ requiredRoleForShift(ShiftID,Role,Min,_), #count{VolunteerID : inShift(VolunteerID,ShiftID,Role)}=N, N < Min, Cost=Min-N. [Cost@4,ShiftID]
 
 %% Maximize the number of shifts that a volunteer is assigned to
 % Pay for the volunteers that can perform a role but are not assigned to a shift
-:~ volunteer(V,_,_), not inShift(V,Sh,R), canPerformRole(V,R), shift(Sh,_,_,_,_). [1@2,V,Sh,R]
+:~ volunteer(V,_,_), not inShift(V,Sh,R), canPerformRole(V,R), shift(Sh,_,_,_,_). [1@3,V,Sh,R]
 
+%% Maximize the volunteers assigned to closer reception centers
 % Pay for the volunteers that are assigned to a further reception center than their preferred location
-%:~ inShift(V,Sh,R), shift(Sh,RC,_,_,_), receptionCenter(RC,L,_), distantFrom(V,L,D). [D@2,V]
+:~ inShift(V,Sh,_), shift(Sh,RC,_,_,_), withinRange(V,RC,D). [D@2,V] 
 
-% Maximize the volunteers assigned to closer reception centers
-% Pay for the volunteers that are assigned to a further reception center than their preferred location
-:~ inShift(V,Sh,_), shift(Sh,RC,_,_,_), withinRange(V,RC,D). [D@1,V] 
-
-withinRange(v1,r2,5).
+%% Maximize the number of different volunteers assigned to a shift
+% Pay for the shifts that have the same volunteer assigned to them
+:~ inShift(V,Sh,_), inShift(V,Sh1,_), Sh != Sh1. [1@1,Sh]
