@@ -26,7 +26,7 @@ distance("Rzeszow","Lublin",177).
 distance("Chelm","Lublin",70).
 distance("Tomaszow Lubelski","Lublin",125).
 
-maxLocationRange(v1,"Katowice",200).
+maxLocationRange(v1,"Krakow",200).
 %maxLocationRange(v2,"Warszawa",200).
 
 receptionCenter("01","Wroclaw",50).
@@ -58,8 +58,6 @@ receptionCenter("H","Przemysl",50).
 %receptionCenter("L","Medyka",50).
 %receptionCenter("M","Korczowa",50).
 
-
-
 node(X) :- city(X). % city is a node
 arc(X,Y,Cost) :- distance(X,Y,Cost). % The distance between two cities is the cost of the arc between them
 arc(X,Y,Cost) :- arc(Y,X,Cost). % Double the arcs to make the graph undirected
@@ -67,11 +65,14 @@ arc(X,Y,Cost) :- arc(Y,X,Cost). % Double the arcs to make the graph undirected
 start(V,X) :- maxLocationRange(V,X,_). % The start node X is the preferred location of the volunteer V
 end(X) :- receptionCenter(_,X,_). % The end node X is the reception center RC
 
-inRealStart(V,Start) | outRealStart(V,Start) :- start(V,Start).
-inRealEnd(End) | outRealEnd(End) :- end(End).
+{inRealStart(V,Start) : start(V,Start)} = 1.
+{inRealEnd(End) : end(End)} = 1.
 
-:- #count{X : inRealStart(V,X)}=Z, Z!=1.
-:- #count{X : inRealEnd(X)}=Z, Z!=1.
+%inRealStart(V,Start) | outRealStart(V,Start) :- start(V,Start).
+%inRealEnd(End) | outRealEnd(End) :- end(End).
+
+%:- #count{X : inRealStart(V,X)}=Z, Z!=1.
+%:- #count{X : inRealEnd(X)}=Z, Z!=1.
 
 inPath(V,X,Y,C) | outPath(V,X,Y,C) :- arc(X,Y,C), start(V,_).
 reached(V,X) :- inRealStart(V,X).
@@ -111,5 +112,4 @@ totalDistance(X) :- #sum{C,V,A,B : inPath(V,A,B,C)}=X.
 % withinRange(VolunteerID,ReceptionCenter,Distance).
 % Distance -> the distance between the volunteer's location and the end location (reception center)
 withinRange(V,RC,D) :- inRealStart(V,X), inRealEnd(L), receptionCenter(RC,L,_), totalDistance(D).
-
 

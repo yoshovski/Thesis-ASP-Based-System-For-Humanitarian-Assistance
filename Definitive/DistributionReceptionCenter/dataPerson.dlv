@@ -141,3 +141,22 @@ relative(87,88).
 relative(87,89).
 relative(90,91).
 relative(92,93).
+
+receptionCenter(r1,"Wroclaw",305).
+receptionCenter(r2,"Torun",373).
+receptionCenter(r3,"Bydgoszcz",300).
+receptionCenter(r4,"Gorzow",284).
+receptionCenter(r5,"Kielce",373).
+receptionCenter(r6,"Olsztyn",200).
+receptionCenter(r7,"Poznan",298).
+receptionCenter(r8,"Szczecin",252).
+receptionCenter(r9,"Lodz",257).
+receptionCenter(r10,"Krakow",150).
+receptionCenter(r11,"Warszawa",301).
+receptionCenter(r12,"Opole",183).
+receptionCenter(r13,"Gdansk",393).
+receptionCenter(r14,"Katowice",194).
+receptionCenter(r15,"Chelm",201).
+receptionCenter(r16,"Tomaszow Lubelski",256).
+receptionCenter(r17,"Przemysl",284).
+

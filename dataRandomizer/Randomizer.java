@@ -217,5 +217,13 @@ public class Randomizer {
         fileWriter.close();
     }
 
+    /*
+    * return a string of a random polish city
+    */
+    private String randomCity(){
+        String[] cities = {"Wroclaw","Torun","Bydgoszcz","Gorzow","Kielce","Olsztyn","Poznan","Szczecin","Lodz","Krakow","Warszawa","Opole","Gdansk","Katowice","Chelm","Tomaszow Lubelski","Przemysl"};
+        return cities[generateRandomNumber(0, cities.length-1)];
+    }
+
 
 }

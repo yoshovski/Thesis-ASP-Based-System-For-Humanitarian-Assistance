@@ -64,7 +64,6 @@ receptionCenter("01","Wroclaw",50).
 receptionCenter("02","Torun",50).
 receptionCenter("03","Bydgoszcz",50).
 receptionCenter("04","Gorzow",50).
-% receptionCenter("05","Wasilkow",50).
 receptionCenter("06","Kielce",50).
 receptionCenter("07","Olsztyn",50).
 receptionCenter("08","Poznan",50).
@@ -75,14 +74,17 @@ receptionCenter("12","Warszawa",1500).
 receptionCenter("13","Opole",50).
 receptionCenter("14","Gdansk",50).
 receptionCenter("15","Katowice",50).
+receptionCenter("E","Chelm",50).
+receptionCenter("G","Tomaszow Lubelski",50).
+receptionCenter("H","Przemysl",50).
+
+
+% receptionCenter("05","Wasilkow",50).
 %receptionCenter("A","Dorohusk-Osada",50).
 %receptionCenter("B","Dolhobyczow",50).
 %receptionCenter("C","Horodlo",50).
 %receptionCenter("D","Lubycza Krolewska",50).
-receptionCenter("E","Chelm",50).
 %receptionCenter("F","Hrubieszow",50).
-receptionCenter("G","Tomaszow Lubelski",50).
-receptionCenter("H","Przemysl",50).
 %receptionCenter("I","Mlyny",50).
 %receptionCenter("J","Lodyna",50).
 %receptionCenter("K","Krowica",50).
