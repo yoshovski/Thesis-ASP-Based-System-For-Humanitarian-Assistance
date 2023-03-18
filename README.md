@@ -2,20 +2,11 @@
 
 Bachelor's Degree in Computer Science at University of Calabria, Italy
 
-**Type of Thesis**: Research with actual working developed ASP (Answer Set Programming) based system
-
-**Case Study**: ASP-based system for optimizing volunteer distribution during a refugee crisis caused by the Russian invasion of Ukraine in Poland
-
-**Thesis Research and Development Locations**: 
-- University of Science and Technology (Cracow, Poland) 
-- University of Calabria (Rende, Italy)
-
-**Author**:
-- [Stefan Yoshovski](https://www.linkedin.com/in/stefan-yoshovski/?locale=en_US)
-
-### Supervisors
-- Prof. Weronika Teresa Adrian
-- Prof. Carmine Dodaro
+- **Type of Thesis**: Research with actual working developed ASP (Answer Set Programming) based system
+- **Case Study**: ASP-based system for optimizing volunteer distribution during a refugee crisis caused by the Russian invasion of Ukraine in Poland
+- **Thesis Research and Development Locations**: University of Science and Technology (Cracow, Poland) and University of Calabria (Rende, Italy)
+- **Author**: [Stefan Yoshovski](https://www.linkedin.com/in/stefan-yoshovski/?locale=en_US)
+- **Supervisors**: Prof. Weronika Teresa Adrian, Prof. Carmine Dodaro
 
 ### Overview
 This thesis examines the impact of the Russian invasion of Ukraine on the influx of refugees into Poland, analyzing the number of refugees and its effects on the region. Additionally, the study presents an ASP-based system for coordinating human resources during a humanitarian crisis. The system was built according to a case study on the refugee influx in Poland and effectively allocates volunteers to reception centers based on factors such as availability, location, and skills. The system addresses a complex combination of workforce management and the Traveling Salesman Problem, utilizing innovative programming methodologies to design an efficient algorithm that provides a solution to the problem at hand. System performance was analyzed through scalability tests, demonstrating that the system can be utilized in real-life situations to improve human resource coordination. This study aims to contribute to the growing body of research on the use of Artificial Intelligence in humanitarian crises and provide insights for future work in this area.
@@ -28,14 +19,10 @@ The research and development of this thesis was conducted in two parts:
 
 ### Materials
 
-- Graph showing distribution of refugees
-  ![refugee_sex_distribution_graph](./Resources/Graphs_and_Data/Refugees_sex_distribution.png)
+- [Thesis Poster Presentation](./Resources/Graphs_and_Data/Poster_Presentation.pdf)
+<embed src="./Resources/Graphs_and_Data/Poster_Presentation.pdf" type="application/pdf" width="100%" height="600px" />
 
-- Thesis Poster Presentation
-  ![thesis_poster_pdf](./Resources/Graphs_and_Data/Poster_Presentation.pdf)
-
-- Complete Thesis
-  ![actual_thesis_pdf](./Resources/Graphs_and_Data/ASP_based_system_for_humanitarian_assistance.pdf)
+- [Complete Thesis](./Resources/Graphs_and_Data/ASP_based_system_for_humanitarian_assistance.pdf)
 
 
 
