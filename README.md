@@ -13,7 +13,7 @@ Bachelor's Degree in Computer Science at University of Calabria, Italy
 1. [Overview](#overview)
 2. [Thesis Research and Development](#thesis-research-and-development)
 3. [Materials](#materials)
-4. [How to run the ASP-Encoding?]
+4. [How to run the ASP-Encoding?](#How to run the ASP-Encoding?)
 
 ### Overview
 This thesis examines the impact of the Russian invasion of Ukraine on the influx of refugees into Poland, analyzing the number of refugees and its effects on the region. Additionally, the study presents an ASP-based system for coordinating human resources during a humanitarian crisis. The system was built according to a case study on the refugee influx in Poland and effectively allocates volunteers to reception centers based on factors such as availability, location, and skills. The system addresses a complex combination of workforce management and the Traveling Salesman Problem, utilizing innovative programming methodologies to design an efficient algorithm that provides a solution to the problem at hand. System performance was analyzed through scalability tests, demonstrating that the system can be utilized in real-life situations to improve human resource coordination. This study aims to contribute to the growing body of research on the use of Artificial Intelligence in humanitarian crises and provide insights for future work in this area.
