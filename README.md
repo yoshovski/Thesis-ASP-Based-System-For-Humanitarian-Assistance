@@ -1,6 +1,6 @@
 # ASP-Based System For Humanitarian Assistance
 
-Bachelor's Degree in Computer Science at University of Calabria, Italy
+Bachelor's Degree in Computer Science at University of Calabria, Italy <br>
 The study involved the implementation of an Artificial Intelligence decision-making system using Answer Set Programming.
 
 - **Type of Thesis**: Research with actual working developed ASP (Answer Set Programming) based system
